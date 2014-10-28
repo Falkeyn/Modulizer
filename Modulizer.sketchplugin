@@ -1,0 +1,151 @@
+// Make selection like a module (cmd shift m)
+
+function alert(msg, title) {
+  title = title || "alert";
+  var app = [NSApplication sharedApplication];
+  [app displayDialog:msg withTitle:title];
+}
+
+function getLayerInGroup(name, group) {
+	var resLayer;
+	var groupLayers = [group layers];
+	for (var i=0; i < [groupLayers count]; i++){
+	  var item = groupLayers[i]
+	  if ([item name] == name) { resLayer = item; }
+	}
+	return resLayer;
+}
+
+function resizeLayer(layer, x, y, width, height) {
+	[[layer frame] setWidth:width];
+	[[layer frame] setHeight:height];
+	[[layer frame] setX:x];
+	[[layer frame] setY:y];
+}
+
+function getLayerRect(layer) {
+	var result = {
+		x: [[layer frame] x],
+		y: [[layer frame] y], 
+		width: [[layer frame] width],
+		height: [[layer frame] height]
+	}
+	return result;
+}
+
+function applyLayerRect(layer, rect) {
+	[[layer frame] setWidth:rect.width];
+	[[layer frame] setHeight:rect.height];
+	[[layer frame] setX:rect.x];
+	[[layer frame] setY:rect.y];
+}
+
+function updateGroup(currentLayer) {
+	var groupLayers = [currentLayer layers];
+	var groupLayersCount = [groupLayers count];
+	var bgLayer = [groupLayers objectAtIndex:0];
+	var bgName = [bgLayer name];
+
+
+	// Измеряем размеры всей группы
+	[currentLayer resizeRoot];
+	var curentRect = getLayerRect(currentLayer); 
+
+	// Удаляем bgLayer чтобы измерить размеры контента
+	[currentLayer removeLayer:bgLayer];
+	[currentLayer resizeRoot];
+	var contentRect = getLayerRect(currentLayer);
+
+	// Возращаем bgLayer на место, в конец группы
+	[currentLayer addLayer:bgLayer];
+	[bgLayer select:true byExpandingSelection:false];
+	[[doc actionWithName:"MSMoveToBackAction"] performAction:nil];
+	[[bgLayer frame] setX:([[bgLayer frame] x] + (curentRect.x - contentRect.x))];
+	[[bgLayer frame] setY:([[bgLayer frame] y] + (curentRect.y - contentRect.y))];
+	//[currentLayer resizeRoot];
+
+
+	var pTop, pRight, pBottom, pLeft;
+	var padding = bgName.split(" ");
+
+	var askText = "Verify padding for new module";
+	if (!parseInt(padding[0])) do {
+		pTop = contentRect.y-curentRect.y;
+		pLeft = contentRect.x-curentRect.x;
+		pRight = curentRect.width - contentRect.width - pLeft;
+		pBottom = curentRect.height - contentRect.height - pTop;
+
+		var answer = [doc askForUserInput:askText initialValue:pTop + " " + pRight + " " + pBottom + " " + pLeft];
+		if (answer) {
+			padding = answer.split(" ");
+		} else {
+			break;
+		}
+		askText = "Wrong format. Try «20», «20 15» or «20 15 30 15»";
+	} while (isNaN(parseInt(padding[0])));
+
+	if (!isNaN(parseInt(padding[0]))) {
+		// Нашли в имени параметры отступов
+		//alert("Appling paddings");
+		if (padding.length >= 1) { pTop = pRight = pBottom = pLeft = parseInt(padding[0]) || 0; }
+		if (padding.length >= 2) { pRight = pLeft = parseInt(padding[1]) || 0; }
+		if (padding.length >= 3) { pBottom = parseInt(padding[2]) || 0; }
+		if (padding.length >= 4) { pLeft = parseInt(padding[3]) || 0; }
+		bgLayer.name = pTop + " " + pRight + " " + pBottom + " " + pLeft;
+		resizeLayer(bgLayer, -pLeft, -pTop, (contentRect.width + pLeft + pRight), (contentRect.height + pTop + pBottom));
+		[currentLayer resizeRoot];
+	}
+	[currentLayer select:true byExpandingSelection:false];
+}
+
+
+if ([selection count] === 0) {
+	alert('Nothing selected', 'Error');
+}
+
+if ([selection count] === 1) {
+	updateGroup(selection[0]);
+}
+
+if ([selection count] > 1) {
+	//alert("Gather selected layers to new group");
+	var firstLayer = selection[0];
+	var parentGroup = [firstLayer parentGroup];
+	var newGroup = [parentGroup addLayerOfType:"group"];
+	for (var i=0; i < [selection count]; i++){
+		var item = selection[i];
+		[[item parentGroup] removeLayer:item];
+		[newGroup addLayer:item];
+	}
+	[newGroup resizeRoot];
+	[newGroup select:true byExpandingSelection:false];
+	updateGroup(newGroup);
+}
+
+/*
+	var currentLayer = selection[0];
+
+	if ([[currentLayer layers] count] <= 1) {
+		alert("Were are layer, selecting parentGroup...");
+		currentLayer = [currentLayer parentGroup];
+	}
+
+	//alert("ok");
+
+	if ([[currentLayer layers] count] > 1) {
+		// Перед нами MSLayerGroup, начинаем с ней работать
+		updateGroup(currentLayer);
+	} else {
+		// This is Layer
+		alert("This is Layer");
+	}
+
+*/
+
+
+
+
+
+
+
+
