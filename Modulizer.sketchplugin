@@ -1,17 +1,24 @@
-// Make selection like a module (cmd shift m)
+// Modulizer (cmd shift m)
+/*
+	Use cases:
+	1. Merge selection to group and save the paddings in bottom background layer
+	2. Restore paddings after content changing
+	3. Change paddings value on bg layer name and update it's
+
+*/
 
 function alert(msg, title) {
-  title = title || "alert";
-  var app = [NSApplication sharedApplication];
-  [app displayDialog:msg withTitle:title];
+	title = title || "alert";
+	var app = [NSApplication sharedApplication];
+	[app displayDialog:msg withTitle:title];
 }
 
 function getLayerInGroup(name, group) {
 	var resLayer;
 	var groupLayers = [group layers];
 	for (var i=0; i < [groupLayers count]; i++){
-	  var item = groupLayers[i]
-	  if ([item name] == name) { resLayer = item; }
+		var item = groupLayers[i]
+		if ([item name] == name) { resLayer = item; }
 	}
 	return resLayer;
 }
@@ -43,21 +50,21 @@ function applyLayerRect(layer, rect) {
 function updateGroup(currentLayer) {
 	var groupLayers = [currentLayer layers];
 	var groupLayersCount = [groupLayers count];
-	var bgLayer = [groupLayers objectAtIndex:0];
+	var bgLayer = groupLayers.objectAtIndex(0);
 	var bgName = [bgLayer name];
 
 
 	// Измеряем размеры всей группы
-	[currentLayer resizeRoot];
+	[currentLayer resizeRoot:null];
 	var curentRect = getLayerRect(currentLayer); 
 
 	// Удаляем bgLayer чтобы измерить размеры контента
 	[currentLayer removeLayer:bgLayer];
-	[currentLayer resizeRoot];
+	[currentLayer resizeRoot:null];
 	var contentRect = getLayerRect(currentLayer);
 
 	// Возращаем bgLayer на место, в конец группы
-	[currentLayer addLayer:bgLayer];
+	currentLayer.addLayers([bgLayer]);
 	[bgLayer select:true byExpandingSelection:false];
 	[[doc actionWithName:"MSMoveToBackAction"] performAction:nil];
 	[[bgLayer frame] setX:([[bgLayer frame] x] + (curentRect.x - contentRect.x))];
@@ -86,14 +93,13 @@ function updateGroup(currentLayer) {
 
 	if (!isNaN(parseInt(padding[0]))) {
 		// Нашли в имени параметры отступов
-		//alert("Appling paddings");
 		if (padding.length >= 1) { pTop = pRight = pBottom = pLeft = parseInt(padding[0]) || 0; }
 		if (padding.length >= 2) { pRight = pLeft = parseInt(padding[1]) || 0; }
 		if (padding.length >= 3) { pBottom = parseInt(padding[2]) || 0; }
 		if (padding.length >= 4) { pLeft = parseInt(padding[3]) || 0; }
 		bgLayer.name = pTop + " " + pRight + " " + pBottom + " " + pLeft;
 		resizeLayer(bgLayer, -pLeft, -pTop, (contentRect.width + pLeft + pRight), (contentRect.height + pTop + pBottom));
-		[currentLayer resizeRoot];
+		[currentLayer resizeRoot:null];
 	}
 	[currentLayer select:true byExpandingSelection:false];
 }
@@ -111,41 +117,13 @@ if ([selection count] > 1) {
 	//alert("Gather selected layers to new group");
 	var firstLayer = selection[0];
 	var parentGroup = [firstLayer parentGroup];
-	var newGroup = [parentGroup addLayerOfType:"group"];
+	var newGroup = parentGroup.addLayerOfType("group");
 	for (var i=0; i < [selection count]; i++){
 		var item = selection[i];
 		[[item parentGroup] removeLayer:item];
-		[newGroup addLayer:item];
+		newGroup.addLayers([item]);
 	}
-	[newGroup resizeRoot];
+	[newGroup resizeRoot:null];
 	[newGroup select:true byExpandingSelection:false];
 	updateGroup(newGroup);
 }
-
-/*
-	var currentLayer = selection[0];
-
-	if ([[currentLayer layers] count] <= 1) {
-		alert("Were are layer, selecting parentGroup...");
-		currentLayer = [currentLayer parentGroup];
-	}
-
-	//alert("ok");
-
-	if ([[currentLayer layers] count] > 1) {
-		// Перед нами MSLayerGroup, начинаем с ней работать
-		updateGroup(currentLayer);
-	} else {
-		// This is Layer
-		alert("This is Layer");
-	}
-
-*/
-
-
-
-
-
-
-
-
