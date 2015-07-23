@@ -1,0 +1,31 @@
+{
+  "author" : "Falkeyn",
+  "commands" : [
+    {
+      "script" : "Modulizer.cocoascript",
+      "handler" : "restorePaddings",
+      "shortcut" : "cmd shift m",
+      "name" : "Restore paddings",
+      "identifier" : "restorePaddings"
+    },
+    {
+      "script" : "Modulizer.cocoascript",
+      "handler" : "setPaddings",
+      "shortcut" : "cmd ctrl shift m",
+      "name" : "Save paddings",
+      "identifier" : "setPaddings"
+    }
+  ],
+  "menu": {
+    "items": [
+      "Modulizer",
+      "restorePaddings",
+      "setPaddings"
+    ]
+  },
+  "identifier" : "com.sketch.modulizer",
+  "version" : "1.0",
+  "description" : "Sketch.app plugin for auto-paddings",
+  "authorEmail" : "falkeyn@yandex.ru",
+  "name" : "Modulizer"
+}
