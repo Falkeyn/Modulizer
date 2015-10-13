@@ -19,11 +19,11 @@ Use cases:
 
 2. **Create your content**: Content can be a single element (like a text box) or a group of elements. (Text boxes, rectangles, or any other group of elements.)
 
-3. **Run the Plugin**: cmd + shift + m
+3. **Run the Plugin**: Highlight the content and background and run **&#8984;&#8679;M**
 
 4. **Enter your settings**: The window accepts pixel values in the <a href="#css-order">same order as css</a>.
 
-5. **Modifying settings**: ctrl + cmd + shift + m lets you set new values. Alternatively, you can rename the layer with your desired padding and rerun cmd + shift + m.
+5. **Modifying settings**: **&#8963;&#8984;&#8679;M** lets you set new values. Alternatively, you can rename the layer with your desired padding and rerun **&#8984;&#8679;M**.
 
 <sup name="rectangle">1</sup> You can also use an ellipse, but it doesn't work well with a perfect circle on a rectangular element. For most consistent results, use a rectangle.
 
