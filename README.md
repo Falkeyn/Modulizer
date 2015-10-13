@@ -17,13 +17,13 @@ Use cases:
 
 1. **Create a background element**: Draw a rectangle<a href="#rectangle"><sup>1</sup></a> for your background element. 
 
-2. **Create your content**: Content can be a single element (like a text box) or a group of elements. (Text boxes, rectangles, or any other group of elements.)
+2. **Create your content**: Content can be a single element (like a text box) or a group of elements. (Text boxes, rectangles, or any other group of elements.) Modulizer is smart enough to base the padding off of whichever element is **on the bottom**, so ensure that all of your other elements are arranged **in front** of your background element.
 
-3. **Run the Plugin**: Highlight the content and background and run **&#8984;&#8679;M**
+3. **Run the Plugin**: Highlight the content and background and **&#8984;&#8679;M**.
 
 4. **Enter your settings**: The window accepts pixel values in the <a href="#css-order">same order as css</a>.
 
-5. **Modifying settings**: **&#8963;&#8984;&#8679;M** lets you set new values. Alternatively, you can rename the layer with your desired padding and rerun **&#8984;&#8679;M**.
+5. **Modifying settings**: **&#8963;&#8984;&#8679;M** lets you set new values. Alternatively, you can rename the background layer with your desired padding values and rerun **&#8984;&#8679;M**.
 
 <sup name="rectangle">1</sup> You can also use an ellipse, but it doesn't work well with a perfect circle on a rectangular element. For most consistent results, use a rectangle.
 
