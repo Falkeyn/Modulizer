@@ -5,14 +5,14 @@
       "script" : "Modulizer.cocoascript",
       "handler" : "restorePaddings",
       "shortcut" : "cmd shift m",
-      "name" : "Restore paddings",
+      "name" : "Apply Padding",
       "identifier" : "restorePaddings"
     },
     {
       "script" : "Modulizer.cocoascript",
       "handler" : "setPaddings",
       "shortcut" : "cmd ctrl shift m",
-      "name" : "Save paddings",
+      "name" : "Change Padding",
       "identifier" : "setPaddings"
     }
   ],
