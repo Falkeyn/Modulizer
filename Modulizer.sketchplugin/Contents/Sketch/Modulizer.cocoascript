@@ -18,6 +18,13 @@ function alert(msg, title) {
 	[app displayDialog:msg withTitle:title];
 }
 
+function updateLayer(layer) {
+	//log("updateLayer (name = "+[layer name]+")");
+
+	// Replaced for 3.5 //layer.resizeRoot(true);
+	layer.resizeToFitChildrenWithOption(0);
+}
+
 function resizeLayer(layer, x, y, width, height) {
 	[[layer frame] setWidth:width];
 	[[layer frame] setHeight:height];
@@ -60,12 +67,12 @@ function getPaddings(currentLayer) {
 	var bgLayer = groupLayers.objectAtIndex(0);
 	
 	// Измеряем размеры всей группы
-	[currentLayer resizeRoot:null];
+	updateLayer(currentLayer);
 	curentRect = getLayerRect(currentLayer); 
 
 	// Удаляем bgLayer чтобы измерить размеры контента
 	[currentLayer removeLayer:bgLayer];
-	[currentLayer resizeRoot:null];
+	updateLayer(currentLayer);
 	contentRect = getLayerRect(currentLayer);
 
 	// Возращаем bgLayer на место, в конец группы
@@ -123,7 +130,7 @@ function setPaddings(context) {
 	if (!askPadding) { return }
 
 	bgLayer.name = askPadding;
-	[currentLayer resizeRoot:null];
+	updateLayer(currentLayer);
 	[currentLayer select:true byExpandingSelection:false];
 	
 	if (askPaddings == curPadding) {
@@ -164,7 +171,7 @@ function restorePaddings(context) {
 	var pLeft = parseInt(pads[3]);
 	resizeLayer(bgLayer, -pLeft, -pTop, (contentRect.width + pLeft + pRight), (contentRect.height + pTop + pBottom));	
 
-	[currentLayer resizeRoot:null];
+	updateLayer(currentLayer);
 	[currentLayer select:true byExpandingSelection:false];
 	
 	[doc showMessage: "Padding restored: "+padding];
@@ -249,7 +256,7 @@ function selectionToGroup(selection) {
 		groupNames.push([item name]);
 	}
 	[newGroup setName:groupNames.join(" + ")];
-	[newGroup resizeRoot:null];
+	updateLayer(newGroup);
 	[newGroup select:true byExpandingSelection:false];
 
 	return newGroup;
