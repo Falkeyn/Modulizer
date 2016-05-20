@@ -25,6 +25,14 @@ function updateLayer(layer) {
 	layer.resizeToFitChildrenWithOption(0);
 }
 
+function sendAction(command) {
+	try {
+		[NSApp sendAction:command to:nil from:doc];
+	} catch(e) {
+    	log(e)
+    }
+}
+
 function resizeLayer(layer, x, y, width, height) {
 	[[layer frame] setWidth:width];
 	[[layer frame] setHeight:height];
@@ -78,7 +86,7 @@ function getPaddings(currentLayer) {
 	// Возращаем bgLayer на место, в конец группы
 	currentLayer.addLayers([bgLayer]);
 	[bgLayer select:true byExpandingSelection:false];
-	[[doc actionWithName:"MSMoveToBackAction"] performAction:nil];
+	sendAction('moveToBack:');
 	[[bgLayer frame] setX:([[bgLayer frame] x] + (curentRect.x - contentRect.x))];
 	[[bgLayer frame] setY:([[bgLayer frame] y] + (curentRect.y - contentRect.y))];
 
