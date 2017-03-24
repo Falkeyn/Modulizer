@@ -11,7 +11,7 @@ Use cases:
 
 ## Demo
 
-[![Demo Video](https://dl.dropboxusercontent.com/u/3240668/sketch/ModulizerVideo.png)](http://youtu.be/7ZHsr-dmHHM)
+[![Demo Video](http://img.youtube.com/vi/7ZHsr-dmHHM/0.jpg)](http://youtu.be/7ZHsr-dmHHM)
 
 ## How to use:
 
